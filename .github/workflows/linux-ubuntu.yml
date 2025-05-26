@@ -42,7 +42,7 @@ jobs:
     - name: configure
       run: |
         make configure
-        ./configure || cat config.log
+        ./configure --with-system-brial=force || cat config.log
 
     - name: make
       run: |
