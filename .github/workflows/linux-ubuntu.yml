@@ -34,10 +34,15 @@ jobs:
           python3-venv qhull-bin singular singular-doc sqlite3 sympow tachyon \
           tar texinfo tox xz-utils autoconf automake gh git gpgconf libtool \
           openssh-client pkg-config
+          wget https://launchpad.net/ubuntu/+source/brial/1.2.12-1.1build1/+build/27987315/+files/libbrial-dev_1.2.12-1.1build1_amd64.deb
+          wget https://launchpad.net/ubuntu/+source/brial/1.2.12-1.1build1/+build/27987315/+files/libbrial-groebner-dev_1.2.12-1.1build1_amd64.deb
+          wget https://launchpad.net/ubuntu/+source/brial/1.2.12-1.1build1/+build/27987315/+files/libbrial-groebner3t64_1.2.12-1.1build1_amd64.deb
+          wget https://launchpad.net/ubuntu/+source/brial/1.2.12-1.1build1/+build/27987315/+files/libbrial3t64_1.2.12-1.1build1_amd64.deb
+          sudo dpkg -i *brial*.deb
     - name: configure
       run: |
         make configure
-        ./configure || cat config.log
+        ./configure --with-system-brial=force || cat config.log
 
     - name: make
       run: |
