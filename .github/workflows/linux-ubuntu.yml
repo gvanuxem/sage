@@ -5,8 +5,11 @@ permissions: {}
 
 jobs:
   build:
-
-    runs-on: ubuntu-latest
+    strategy: 
+    fail-fast: false
+      matrix:
+        os: [ubuntu-22.04, ubuntu-24.04]
+    runs-on: ${{ matrix.os }} 
     timeout-minutes: 240
 
     steps:
@@ -14,35 +17,18 @@ jobs:
     - name: install dependencies
       run: |
         sudo apt update && sudo apt dist-upgrade
-        sudo apt install bc binutils bzip2 ca-certificates cliquer cmake curl \
-          ecl eclib-tools fflas-ffpack flex g++ gap gcc gengetopt gfan gfortran \
-          glpk-utils gmp-ecm lcalc libatomic-ops-dev libboost-dev \
-          libbraiding-dev libbz2-dev \
-          libcdd-dev libcdd-tools libcliquer-dev libcurl4-openssl-dev libec-dev \
-          libecm-dev libffi-dev libflint-dev libfplll-dev libfreetype-dev \
-          libgap-dev libgc-dev libgd-dev libgf2x-dev libgivaro-dev libglpk-dev \
-          libgmp-dev libgsl-dev libhomfly-dev libiml-dev liblfunction-dev \
-          liblinbox-dev liblrcalc-dev liblzma-dev libm4ri-dev libm4rie-dev \
-          libmpc-dev libmpfi-dev libmpfr-dev libncurses5-dev libntl-dev \
-          libopenblas-dev libpari-dev libplanarity-dev libppl-dev \
-          libprimecount-dev libprimesieve-dev libpython3-dev libqhull-dev \
-          libreadline-dev librw-dev libsingular4-dev libsqlite3-dev libssl-dev \
-          libsuitesparse-dev libsymmetrica2-dev libz-dev libzmq3-dev m4 make \
-          maxima meson nauty ninja-build openssl palp pari-doc \
-          pari-elldata pari-galdata pari-galpol pari-gp2c pari-seadata patch \
-          patchelf perl pkg-config planarity ppl-dev python3 python3-setuptools \
-          python3-venv qhull-bin singular singular-doc sqlite3 sympow tachyon \
-          tar texinfo tox xz-utils autoconf automake gh git gpgconf libtool \
-          openssh-client pkg-config
-          wget https://launchpad.net/ubuntu/+source/brial/1.2.12-1.1build1/+build/27987315/+files/libbrial-dev_1.2.12-1.1build1_amd64.deb
-          wget https://launchpad.net/ubuntu/+source/brial/1.2.12-1.1build1/+build/27987315/+files/libbrial-groebner-dev_1.2.12-1.1build1_amd64.deb
-          wget https://launchpad.net/ubuntu/+source/brial/1.2.12-1.1build1/+build/27987315/+files/libbrial-groebner3t64_1.2.12-1.1build1_amd64.deb
-          wget https://launchpad.net/ubuntu/+source/brial/1.2.12-1.1build1/+build/27987315/+files/libbrial3t64_1.2.12-1.1build1_amd64.deb
-          sudo dpkg -i *brial*.deb
+        sudo apt-get install bc binutils bzip2 ca-certificates cliquer cmake curl ecl eclib-tools fflas-ffpack flex g++ gap gcc gengetopt gfan gfortran          glpk-utils gmp-ecm lcalc libatomic-ops-dev libboost-dev libbraiding-dev libbz2-dev libcdd-dev libcdd-tools libcliquer-dev libcurl4-openssl-dev
+        libec-dev libecm-dev libffi-dev libflint-dev libfplll-dev libfreetype-dev libgc-dev libgd-dev libgf2x-dev libgivaro-dev libglpk-dev                      libgmp-dev libgsl-dev libhomfly-dev libiml-dev liblfunction-dev liblinbox-dev liblrcalc-dev liblzma-dev libm4ri-dev libm4rie-dev  libmpc-dev
+        libmpfi-dev libmpfr-dev libncurses5-dev libntl-dev libopenblas-dev libpari-dev libplanarity-dev libppl-dev libprimesieve-dev libpython3-dev
+        libqhull-dev libreadline-dev librw-dev libsingular4-dev libsqlite3-dev libssl-dev libsuitesparse-dev libsymmetrica2-dev libz-dev libzmq3-dev
+        m4 make maxima meson nauty ninja-build openssl palp pari-doc pari-elldata pari-galdata pari-galpol pari-gp2c pari-seadata patch patchelf
+        perl pkg-config planarity ppl-dev python3 python3-setuptools python3-venv qhull-bin singular singular-doc sqlite3 sympow tachyon
+        tar texinfo tox xz-utils autoconf automake git gpgconf libtool openssh-client pkg-config
+
     - name: configure
       run: |
         make configure
-        ./configure --with-system-brial=force || cat config.log
+        ./configure | cat config.log
 
     - name: make
       run: |
